@@ -14,6 +14,11 @@ public:
 
 private:
 	Ui::testPlotClass ui;
+
+public slots:
+    void on_bStart_clicked();
+       
+    
 };
 
 #endif // TESTPLOT_H
