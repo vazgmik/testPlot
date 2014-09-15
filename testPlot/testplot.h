@@ -4,7 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QTimer>
 #include "ui_testplot.h"
-
+class MyThread;
 class testPlot : public QMainWindow
 {
 	Q_OBJECT
@@ -18,6 +18,7 @@ private:
 	Ui::testPlotClass ui;
 	QTimer dataTimer;
 	QString demoName;
+	MyThread * pThread;
 public slots:
     void on_bStart_clicked();
 private slots:

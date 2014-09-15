@@ -1,12 +1,14 @@
 #include "testplot.h"
-
+#include "mythread.h"
 
 testPlot::testPlot(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+	pThread = new MyThread(this);
+	pThread->start();
 	connect(ui.pbStart,SIGNAL(clicked()),SLOT(on_bStart_clicked()));
-	setupRealtimeDataDemo(ui.plot_wid1);
+//	setupRealtimeDataDemo(ui.plot_wid1);
 	setWindowTitle("QCustomPlot: "+demoName);
 	statusBar()->clearMessage();
 	ui.plot_wid1->replot();
@@ -105,7 +107,7 @@ void testPlot::realtimeDataSlot()
   double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
 #endif
   static double lastPointKey = 0;
-  if (key-lastPointKey > 0.001) // at most add point every 10 ms
+  if (key-lastPointKey > 0.01) // at most add point every 10 ms
   {
     double value0 = qSin(key); //sin(key*1.6+cos(key*1.7)*2)*10 + sin(key*1.2+0.56)*20 + 26;
     double value1 = qCos(key); //sin(key*1.3+cos(key*1.2)*1.2)*7 + sin(key*0.9+0.26)*24 + 26;

@@ -10,3 +10,7 @@ MyThread::~MyThread()
 {
 
 }
+void MyThread::run()
+{
+
+}

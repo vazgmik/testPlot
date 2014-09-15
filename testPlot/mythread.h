@@ -10,8 +10,10 @@ class MyThread : public QThread
 public:
 	MyThread(QObject *parent);
 	~MyThread();
+	void run();
+	bool Stop;
+signals:
 
-private:
 	
 };
 
