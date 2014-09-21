@@ -14,7 +14,7 @@ public:
 	void setupRealtimeDataDemo(QCustomPlot *customPlot);
 	void setupRealtimeDataDemo2(QCustomPlot *customPlot);
 	~testPlot();
-
+	double cat;
 private:
 	Ui::testPlotClass ui;
 	QTimer dataTimer;
