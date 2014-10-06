@@ -1,12 +1,27 @@
 #include "testplot.h"
+#include "HostUsbHelper.h"
+
+#include <usb.h>
+
 
 
 testPlot::testPlot(QWidget *parent)
 	: QMainWindow(parent),cat(0)
+	, PVn(0)
+	, OPn(0)
+	, Nu_code(0)
+	, Nx_code(0)
 {
 	ui.setupUi(this);
 	connect(ui.pbStart,SIGNAL(clicked()),SLOT(on_bStart_clicked()));
 	connect(ui.pbStop,SIGNAL(clicked()),SLOT(on_bStop_clicked()));
+
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(timeout_one_second()));
+	timer->start(100);
+
+
+
 }
 
 testPlot::~testPlot()
@@ -93,7 +108,7 @@ void testPlot::realtimeDataSlot()
 	static double lastPointKey = 0;
 	if (key-lastPointKey > 0.01) 
 	{
-		double value1 = sin(key*1.3+cos(key*1.2)*1.2)*7 - sin(key*0.9+0.26)*24 + 26;
+		double value1 = Nu_code;//sin(key*1.3+cos(key*1.2)*1.2)*7 - sin(key*0.9+0.26)*24 + 26;
 		ui.plot_wid1->graph(0)->addData(key, value1);
 		ui.plot_wid1->graph(0)->rescaleValueAxis(true);
 		lastPointKey = key;
@@ -127,7 +142,7 @@ void testPlot::realtimeDataSlot2()
 	static double lastPointKey = 0;
 	if (key-lastPointKey > 0.01) // at most add point every 10 ms
 	{
-		double value1 = (rand()%7-rand()%8); 
+		double value1 = Nx_code;//(rand()%7-rand()%8); 
 		ui.plot_wid2->graph(0)->addData(cat, value1);
 		ui.plot_wid2->graph(0)->rescaleValueAxis(true);
 		lastPointKey = cat;
@@ -136,5 +151,86 @@ void testPlot::realtimeDataSlot2()
 	
 	ui.plot_wid2->xAxis->setRange(cat,2, Qt::AlignRight);
 	ui.plot_wid2->replot();
+
+}
+
+void testPlot::timeout_one_second()
+{
+	QString Nx_string, Nu_string, PVstring, OPstring;
+	try {
+		Nu_code = readFromDevice();
+		writeToDevice(Nx_code);
+		Nx_string = QString::number(Nx_code);
+		Nu_string = QString::number(Nu_code);
+
+		OPn = 100.0 * Nu_code / 1024.0;
+		PVn = transfer_function(time_step, OPn);
+
+		Nx_code = (PVn / 100.0) * 256; 
+
+		PVstring = QString::number(PVn);
+		OPstring = QString::number(OPn);
+	}
+	catch (std::runtime_error& e) {
+		Nx_string = Nu_string = PVstring = OPstring = "IO error";
+	}
+
+	static int filter = 0;
+	if (filter == 0) {
+		ui.lbNx->setText(Nx_string);
+		ui.lbNu->setText(Nu_string);
+		ui.lbPVn->setText(PVstring);
+		ui.lbOPn->setText(OPstring);
+	}
+	filter = (filter + 1) % 10;
+}
+
+unsigned short testPlot::readFromDevice()
+{
+	static bool no_link_before = true;
+	
+	usb_dev_handle *handle;
+	handle = usbOpenDevice(0x16C0, "obdev.at", 0x05DC, "template");
+
+	if (!handle) {
+		no_link_before = true;
+		throw std::runtime_error("ошибка связи");		
+	}
+
+	char buffer[255];
+	int nBytes = usb_control_msg(handle, 
+		USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, 
+		USB_DATA_OUT, 0, 0, (char *)buffer, sizeof(buffer), 5000);
+
+	unsigned raw_data = *((unsigned *) buffer);
+	double adc_data = 0xFFFF & raw_data; // АЦП в Tiny 10-разрядный
+	adc_data *= 0.25;
+	if (!no_link_before) {
+		// Если в прошлый раз был сигнал, фильтруем
+		adc_data = 0.05 * (adc_data) + 0.95 * Nu_code;
+	}
+	usb_close(handle);
+
+
+
+	no_link_before = false;
+	return adc_data;
+}
+
+void testPlot::writeToDevice(unsigned short PV_code)
+{
+	usb_dev_handle *handle;
+	handle = usbOpenDevice(0x16C0, "obdev.at", 0x05DC, "template");
+	if (!handle)
+		throw std::runtime_error("ошибка связи");
+
+
+	unsigned data_packet = PV_code << 16;
+
+	int nBytes = usb_control_msg(handle, 
+		USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, 
+		USB_DATA_IN, 0, 0, (char *) &data_packet, sizeof(data_packet), 5000);
+
+	usb_close(handle);
 
 }
