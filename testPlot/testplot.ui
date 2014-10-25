@@ -19,6 +19,15 @@
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <widget class="QToolBox" name="toolBox">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true">QToolBox::tab {
      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -35,6 +44,9 @@
         </property>
         <property name="currentIndex">
          <number>0</number>
+        </property>
+        <property name="tabSpacing">
+         <number>6</number>
         </property>
         <widget class="QWidget" name="pmodel">
          <property name="geometry">
@@ -88,7 +100,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="spGain"/>
+               <widget class="QDoubleSpinBox" name="sbGain">
+                <property name="maximum">
+                 <double>500.990000000000009</double>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="lb_Delay">
@@ -103,7 +119,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="sbDelay"/>
+               <widget class="QDoubleSpinBox" name="sbDelay">
+                <property name="maximum">
+                 <double>500.990000000000009</double>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="lb_Time1">
@@ -119,8 +139,11 @@
               </item>
               <item>
                <widget class="QDoubleSpinBox" name="sbTime1">
+                <property name="maximum">
+                 <double>500.990000000000009</double>
+                </property>
                 <property name="value">
-                 <double>0.100000000000000</double>
+                 <double>0.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -139,9 +162,20 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="sbTimeEps"/>
+               <widget class="QDoubleSpinBox" name="sbTimeEps">
+                <property name="maximum">
+                 <double>500.990000000000009</double>
+                </property>
+               </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="cbZoom">
+              <property name="text">
+               <string>Зум</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QTabWidget" name="plotWidget">
@@ -196,7 +230,16 @@
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
@@ -285,20 +328,20 @@
     <property name="title">
      <string>Меню</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="save_ini"/>
+    <addaction name="load_ini"/>
     <addaction name="separator"/>
     <addaction name="action_CSV"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action">
+  <action name="save_ini">
    <property name="text">
     <string>Сохранить в файл</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="load_ini">
    <property name="text">
     <string>Загрузить из файла</string>
    </property>

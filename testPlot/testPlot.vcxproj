@@ -39,7 +39,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\include;C:\Qt\Qt5.1.1\5.1.1\msvc2012\include\QtANGLE;C:\Qt\Qt5.1.1\5.1.1\msvc2012\include\QtPrintSupport;C:\Qt\Qt5.1.1\5.1.1\msvc2012\include\QtGui;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5OpenGL;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5OpenGLExtensions;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5Gui;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5PrintSupport;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5OpenGL;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5OpenGLExtensions;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5Gui;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5PrintSupport;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5Core;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5Widgets;$(LibraryPath)</LibraryPath>
     <ReferencePath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib;$(ReferencePath)</ReferencePath>
     <ExecutablePath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>

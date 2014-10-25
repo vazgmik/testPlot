@@ -14,8 +14,10 @@ const double time_step = 0.1;
 	transfer_function_t()
 		: function_type(FirstOrder)
 		, time_constant1(100)
+		, time_constant2(0)
 		, gain(1)
 		, PV(0)
+		,delay(0)
 	{}
 	double time_constant1, time_constant2, gain, delay;
 
@@ -35,6 +37,13 @@ const double time_step = 0.1;
 		PV = y * 100;
 		return PV;
 	}
+	void setData(int t1,int t2,int g,int d)
+	{
+		time_constant1 = t1;
+		time_constant2 = t2;
+		gain = g;
+		delay = d;
+	}
 };
 
 
@@ -43,16 +52,17 @@ class testPlot : public QMainWindow
 	Q_OBJECT
 
 public:
+	short io_delay;
 	testPlot(QWidget *parent = 0);
-	void setupRealtimeData(QCustomPlot *customPlot);
-	void setupAdvancedAxesDemo(QCustomPlot *customPlot);
+	void setupRealtimeData1(QCustomPlot *,QString ,QString);
+	void setupRealtimeData2(QCustomPlot *,QString ,QString);
 	void onStart();
-	void onStop();
 	~testPlot();
-	double x_value;
 	QString Nx_string, Nu_string, PVstring, OPstring;
-	QCPRange prev;
+	QString TimeConst2,EpsConst;
 	bool b_Stop;
+	double x_value;
+	bool zoom;
 private:
 	Ui::testPlotClass ui;
 	QTimer dataTimer;
@@ -61,16 +71,25 @@ private:
 	double Nu_code, Nx_code;
 	double OPn, PVn;
 	QCPAxisRect *wideAxisRect;
+	QCPAxisRect *wideAxisRect2;
+	QCPItemText *textLabel;
+	QCPItemText *textLabel2;
 	transfer_function_t transfer_function;
-
+	
 private:
 	unsigned short readFromDevice();
 	void writeToDevice(unsigned short PV_code);
 
 public slots:
+	void SaveCSV();
+	//void ();
+	void OnZoom();
+	void SaveSettings();
+	void LoadSettings();
 	void on_cbModel_changed(int index);
 	void on_sbNx_changed(int);
-	void setRangeOver(QCPRange);
+	void setRangeOver(QCPRange,QCPRange);
+	void setRangeOver2(QCPRange,QCPRange);
 private slots:
     void realtimeDataSlot();
 	void timeout_one_second();
