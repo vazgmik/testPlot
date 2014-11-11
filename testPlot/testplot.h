@@ -54,8 +54,7 @@ class testPlot : public QMainWindow
 public:
 	short io_delay;
 	testPlot(QWidget *parent = 0);
-	void setupRealtimeData1(QCustomPlot *,QString ,QString);
-	void setupRealtimeData2(QCustomPlot *,QString ,QString);
+	void setupRealtimeData(QCustomPlot *,QString ,QString ,QCPAxisRect *,QCPItemText *);
 	void onStart();
 	~testPlot();
 	QString Nx_string, Nu_string, PVstring, OPstring;
@@ -65,15 +64,14 @@ public:
 	bool zoom;
 private:
 	Ui::testPlotClass ui;
-	QTimer dataTimer;
 	QTimer *timer;
 	QString demoName;
 	double Nu_code, Nx_code;
 	double OPn, PVn;
-	QCPAxisRect *wideAxisRect;
-	QCPAxisRect *wideAxisRect2;
-	QCPItemText *textLabel;
-	QCPItemText *textLabel2;
+	QCPAxisRect *gr1_wideAxisRect;
+	QCPAxisRect *gr2_wideAxisRect;
+	QCPItemText *gr1_textError;
+	QCPItemText *gr2_textError;
 	transfer_function_t transfer_function;
 	
 private:
@@ -82,14 +80,12 @@ private:
 
 public slots:
 	void SaveCSV();
-	//void ();
 	void OnZoom();
 	void SaveSettings();
 	void LoadSettings();
 	void on_cbModel_changed(int index);
 	void on_sbNx_changed(int);
 	void setRangeOver(QCPRange,QCPRange);
-	void setRangeOver2(QCPRange,QCPRange);
 private slots:
     void realtimeDataSlot();
 	void timeout_one_second();

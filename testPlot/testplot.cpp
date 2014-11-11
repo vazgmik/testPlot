@@ -14,6 +14,7 @@ testPlot::testPlot(QWidget *parent)
 	,EpsConst("<html><head/><body><p align='center'><span style=' font-size:14pt; font-weight:400;'>x:</span></p></body></html>")
 	,zoom(false)
 	,io_delay(0)
+	
 {
 	ui.setupUi(this);
 	demoName = "Model";
@@ -24,10 +25,18 @@ testPlot::testPlot(QWidget *parent)
 	ui.sbDelay->setValue(transfer_function.delay);
 	ui.sbTime1->setValue(transfer_function.time_constant1);
 	ui.sbTimeEps->isVisible() && ui.sbTimeEps->text() == TimeConst2 ? ui.sbTimeEps->setValue(transfer_function.time_constant2) : 0;
-
+	ui.graph_range->setValue(20);
+	gr1_wideAxisRect = new QCPAxisRect(ui.plot_wid);
+	gr2_wideAxisRect = new QCPAxisRect(ui.plot_wid_2);
+	setupRealtimeData(ui.plot_wid,"Nx","Nu",gr1_wideAxisRect,gr1_textError);
+	setupRealtimeData(ui.plot_wid_2,"OPn","PVn",gr2_wideAxisRect,gr2_textError);
+	gr1_wideAxisRect->axis(QCPAxis::atLeft)->setProperty("name","Graph1");
+	gr2_wideAxisRect->axis(QCPAxis::atLeft)->setProperty("name","Graph2");
 	timer = new QTimer(this);
 
 
+	connect(gr1_wideAxisRect->axis(QCPAxis::atLeft), SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(setRangeOver(QCPRange,QCPRange)));
+	connect(gr2_wideAxisRect->axis(QCPAxis::atLeft), SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(setRangeOver2(QCPRange,QCPRange)));
 	connect(ui.cbModelType,SIGNAL(currentIndexChanged (int)),SLOT(on_cbModel_changed(int)));
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)) , this, SLOT(on_sbNx_changed(int)));
 	connect(ui.save_ini, SIGNAL(triggered()), this, SLOT(SaveSettings()));
@@ -36,9 +45,6 @@ testPlot::testPlot(QWidget *parent)
 	connect(ui.action_CSV, SIGNAL(triggered()), this, SLOT(SaveCSV()));
 	connect(timer, SIGNAL(timeout()), this, SLOT(timeout_one_second()));
 	onStart();
-
-	setupRealtimeData1(ui.plot_wid,"Nx","Nu");
-	setupRealtimeData2(ui.plot_wid_2,"OPn","PVn");
 
 }
 
@@ -49,8 +55,7 @@ testPlot::~testPlot()
 void testPlot::onStart()
 {
 	b_Stop = false;
-	connect(&dataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
-	dataTimer.start(100);
+	connect(timer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
 	timer->start(100);
 	statusBar()->clearMessage();
 	ui.plot_wid->replot();
@@ -58,7 +63,6 @@ void testPlot::onStart()
 
 void testPlot::OnZoom()
 {
-
 	if(ui.cbZoom->isChecked())
 	{
 		zoom = true;
@@ -176,7 +180,8 @@ void testPlot::on_sbNx_changed(int s)
 	}
 	catch (std::runtime_error& e) {
 		Nx_string = Nu_string = PVstring = OPstring = "IO error";
-		textLabel->setVisible(true);
+		gr1_textError->setVisible(true);
+		gr2_textError->setVisible(true);
 		QMessageBox::critical(this,QTextCodec::codecForLocale()->toUnicode( "ОШИБКА СВЯЗИ"), QTextCodec::codecForLocale()->toUnicode( "Ошибка устройства ввода/вывода" ));
 	}
 }
@@ -185,9 +190,28 @@ void testPlot::setRangeOver(QCPRange newRange, QCPRange oldRange)
 {
 	if(zoom)
 	{
-		QCPRange y2 = wideAxisRect->axis(QCPAxis::atLeft,1)->range();
+		QCPAxis *r = dynamic_cast<QCPAxis *>(sender());
+		if(!r)
+			return;
+		
+		QString s = r->property("name").toString();
+		
+		QCPAxisRect * rect=0;
+		if(s == "Graph1")
+		{
+			rect = gr1_wideAxisRect;
+		}
+		else if(s =="Graph2" )
+		{
+			rect = gr2_wideAxisRect;
+		}
+
+		if(rect == NULL)
+			return; 
+
+		QCPRange y2 =  rect->axis(QCPAxis::atLeft,1)->range();
 		double ypos = ui.plot_wid->mapFromGlobal(QCursor::pos()).y();
-		double y = wideAxisRect->axis(QCPAxis::atLeft)->pixelToCoord(ypos);
+		double y =   rect->axis(QCPAxis::atLeft)->pixelToCoord(ypos);
 		double delta1 = newRange.upper -  newRange.lower;
 		double delta2 = y2.upper -  y2.lower;
 		double delta3 = oldRange.upper - oldRange.lower;
@@ -209,45 +233,13 @@ void testPlot::setRangeOver(QCPRange newRange, QCPRange oldRange)
 			new_y2_lower = y2.lower + (1-k)*dy;
 		}
 
-		wideAxisRect->axis(QCPAxis::atLeft,1)->setRange(new_y2_upper,new_y2_lower );
-	}
-}
-
-void testPlot::setRangeOver2(QCPRange newRange, QCPRange oldRange)
-{
-	if(zoom)
-	{
-		QCPRange y2 = wideAxisRect2->axis(QCPAxis::atLeft,1)->range();
-		double ypos = ui.plot_wid_2->mapFromGlobal(QCursor::pos()).y();
-		double y = wideAxisRect2->axis(QCPAxis::atLeft)->pixelToCoord(ypos);
-		double delta1 = newRange.upper -  newRange.lower;
-		double delta2 = y2.upper -  y2.lower;
-		double delta3 = oldRange.upper - oldRange.lower;
-		double delta = delta1*delta2/delta3;
-		double dy = (delta2 - delta);
-		double new_y2_upper = 0;
-		double new_y2_lower = 0;
-		if(dy < 0.0000001)
-		{
-			double delta3_1 = oldRange.upper-  newRange.upper;
-			double delta4_1 = oldRange.lower-  newRange.lower;
-			new_y2_upper =  -delta2*delta3_1/delta1 +y2.upper;
-			new_y2_lower =  -delta2*delta4_1/delta1 +y2.lower;
-		}
-		else
-		{
-			double k = qAbs(y-newRange.upper) / delta1 ;
-			new_y2_upper = y2.upper - k*dy;
-			new_y2_lower = y2.lower + (1-k)*dy;
-		}
-
-		wideAxisRect2->axis(QCPAxis::atLeft,1)->setRange(new_y2_upper,new_y2_lower );
+		 rect->axis(QCPAxis::atLeft,1)->setRange(new_y2_upper,new_y2_lower);
 	}
 }
 
 
 
-void testPlot::setupRealtimeData1(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2  )
+void testPlot::setupRealtimeData(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2,QCPAxisRect * Rect,QCPItemText * textLabel )
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
 	QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
@@ -256,31 +248,27 @@ void testPlot::setupRealtimeData1(QCustomPlot *customPlot,QString lax_lab1,QStri
 	// configure axis rect:
 	customPlot->plotLayout()->clear(); // clear default axis rect so we can start from scratch
 
-	wideAxisRect = new QCPAxisRect(customPlot);
-	wideAxisRect->setupFullAxesBox(true);
-	//wideAxisRect->axis(QCPAxis::atBottom)->setAutoTickStep(false);
-	//wideAxisRect->axis(QCPAxis::atBottom)->setTickStep(1);
-	wideAxisRect->axis(QCPAxis::atLeft)->setTickLabelColor(Qt::blue);
-	wideAxisRect->axis(QCPAxis::atLeft)->setLabel(lax_lab1);
-	wideAxisRect->addAxis(QCPAxis::atLeft)->setTickLabelColor(Qt::red); // add an extra axis on the left and color its numbers
+	Rect->setupFullAxesBox(true);																																																																																																																								
+	Rect->axis(QCPAxis::atLeft)->setTickLabelColor(Qt::blue);
+	Rect->axis(QCPAxis::atLeft)->setLabel(lax_lab1);
+	Rect->addAxis(QCPAxis::atLeft)->setTickLabelColor(Qt::red); // add an extra axis on the left and color its numbers
 
-	customPlot->plotLayout()->addElement(0, 0, wideAxisRect); // insert axis rect in first row
-	wideAxisRect->axis(QCPAxis::atLeft, 1)->setRangeLower(0);
-	wideAxisRect->axis(QCPAxis::atLeft,1)->setLabel(lax_lab2);
+	customPlot->plotLayout()->addElement(0, 0,Rect); // insert axis rect in first row
+	Rect->axis(QCPAxis::atLeft, 1)->setRangeLower(0);
+	Rect->axis(QCPAxis::atLeft,1)->setLabel(lax_lab2);
 
-	QCPGraph *mainGraph1 = customPlot->addGraph(wideAxisRect->axis(QCPAxis::atBottom), wideAxisRect->axis(QCPAxis::atLeft));
+	QCPGraph *mainGraph1 = customPlot->addGraph(Rect->axis(QCPAxis::atBottom), Rect->axis(QCPAxis::atLeft));
 	mainGraph1->setPen(QPen(Qt::blue, 2));
 	mainGraph1->setBrush(QColor(255, 161, 0, 50));
 
-	QCPGraph *mainGraph2 = customPlot->addGraph(wideAxisRect->axis(QCPAxis::atBottom), wideAxisRect->axis(QCPAxis::atLeft, 1));
+	QCPGraph *mainGraph2 = customPlot->addGraph(Rect->axis(QCPAxis::atBottom), Rect->axis(QCPAxis::atLeft, 1));
 	mainGraph2->setPen(QPen(Qt::red, 2));
 	mainGraph2->setBrush(QColor(110, 170, 110, 30));
-
 
 	customPlot->graph(0)->setAntialiasedFill(false);
 	customPlot->graph(1)->setAntialiasedFill(false);
 
-	connect(wideAxisRect->axis(QCPAxis::atLeft), SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(setRangeOver(QCPRange,QCPRange)));
+	connect(Rect->axis(QCPAxis::atLeft), SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(setRangeOver(QCPRange,QCPRange)));
 
 	// add the text label at the top:
 	textLabel = new QCPItemText(customPlot);
@@ -293,51 +281,6 @@ void testPlot::setupRealtimeData1(QCustomPlot *customPlot,QString lax_lab1,QStri
 	textLabel->setPen(QPen(Qt::black)); // show black border around text
 }
 
-void testPlot::setupRealtimeData2(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2  )
-{
-#if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
-	QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
-#endif
-
-	// configure axis rect:
-	customPlot->plotLayout()->clear(); // clear default axis rect so we can start from scratch
-
-	wideAxisRect2 = new QCPAxisRect(customPlot);
-	wideAxisRect2->setupFullAxesBox(true);
-	//wideAxisRect->axis(QCPAxis::atBottom)->setAutoTickStep(false);
-	//wideAxisRect->axis(QCPAxis::atBottom)->setTickStep(1);
-	wideAxisRect2->axis(QCPAxis::atLeft)->setTickLabelColor(Qt::blue);
-	wideAxisRect2->axis(QCPAxis::atLeft)->setLabel(lax_lab1);
-	wideAxisRect2->addAxis(QCPAxis::atLeft)->setTickLabelColor(Qt::red); // add an extra axis on the left and color its numbers
-
-	customPlot->plotLayout()->addElement(0, 0, wideAxisRect2); // insert axis rect in first row
-	wideAxisRect2->axis(QCPAxis::atLeft, 1)->setRangeLower(0);
-	wideAxisRect2->axis(QCPAxis::atLeft,1)->setLabel(lax_lab2);
-
-	QCPGraph *mainGraph1 = customPlot->addGraph(wideAxisRect2->axis(QCPAxis::atBottom), wideAxisRect2->axis(QCPAxis::atLeft));
-	mainGraph1->setPen(QPen(Qt::blue, 2));
-	mainGraph1->setBrush(QColor(255, 161, 0, 50));
-
-	QCPGraph *mainGraph2 = customPlot->addGraph(wideAxisRect2->axis(QCPAxis::atBottom), wideAxisRect2->axis(QCPAxis::atLeft, 1));
-	mainGraph2->setPen(QPen(Qt::red, 2));
-	mainGraph2->setBrush(QColor(110, 170, 110, 30));
-
-	customPlot->graph(0)->setAntialiasedFill(false);
-	customPlot->graph(1)->setAntialiasedFill(false);
-
-	connect(wideAxisRect2->axis(QCPAxis::atLeft), SIGNAL(rangeChanged(QCPRange,QCPRange)), this, SLOT(setRangeOver2(QCPRange,QCPRange)));
-
-	// add the text label at the top:
-	textLabel2 = new QCPItemText(customPlot);
-	customPlot->addItem(textLabel2);
-	textLabel2->setPositionAlignment(Qt::AlignTop|Qt::AlignHCenter);
-	textLabel2->position->setType(QCPItemPosition::ptAxisRectRatio);
-	textLabel2->position->setCoords(0.5, 0.1); // place position at center/top of axis rect
-	textLabel2->setText(QTextCodec::codecForLocale()->toUnicode( "Ошибка устройства ввода/вывода.Проверьте вставлено ли устройство в порт." ));
-	textLabel2->setFont(QFont(font().family(), 12)); // make font a bit larger
-	textLabel2->setPen(QPen(Qt::black)); // show black border around text
-}
-
 void testPlot::realtimeDataSlot()
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
@@ -348,12 +291,11 @@ void testPlot::realtimeDataSlot()
 	static double lastPointKey = 0;
 	if (key-lastPointKey > 0.01) // at most add point every 10 ms
 	{
-
 		ui.plot_wid->graph(0)->addData(x_value, Nx_code);
 		ui.plot_wid->graph(1)->addData(x_value, Nu_code);
 		ui.plot_wid_2->graph(0)->addData(x_value, PVn);
-
 		ui.plot_wid_2->graph(1)->addData(x_value, OPn);
+
 		if(!zoom)
 		{
 			ui.plot_wid->graph(0)->rescaleValueAxis();
@@ -368,16 +310,16 @@ void testPlot::realtimeDataSlot()
 
 	if(!zoom)
 	{
-		if(x_value<3)
+		if(x_value<ui.graph_range->value())
 		{
-			wideAxisRect->axis(QCPAxis::atBottom,0)->setRange(0,x_value);
-			wideAxisRect2->axis(QCPAxis::atBottom,0)->setRange(0,x_value);
+			gr1_wideAxisRect->axis(QCPAxis::atBottom,0)->setRange(0,x_value);
+			gr2_wideAxisRect->axis(QCPAxis::atBottom,0)->setRange(0,x_value);
 		}
 		else
 		{
-			double val = x_value - 3;
-			wideAxisRect->axis(QCPAxis::atBottom,0)->setRange(val,x_value);
-			wideAxisRect2->axis(QCPAxis::atBottom,0)->setRange(val,x_value);
+			double val = x_value - ui.graph_range->value();
+			gr1_wideAxisRect->axis(QCPAxis::atBottom,0)->setRange(val,x_value);
+			gr2_wideAxisRect->axis(QCPAxis::atBottom,0)->setRange(val,x_value);
 		}
 		ui.plot_wid->replot();
 		ui.plot_wid_2->replot();
@@ -390,8 +332,8 @@ void testPlot::timeout_one_second()
 		Nu_code = readFromDevice();
 		writeToDevice(Nx_code);
 		statusBar()->clearMessage();
-		textLabel->setVisible(false);
-		textLabel2->setVisible(false);
+		gr1_textError->setVisible(false);
+		gr2_textError->setVisible(false);
 		Nx_string = QString::number(Nx_code);
 		Nu_string = QString::number(Nu_code);
 
@@ -415,8 +357,8 @@ void testPlot::timeout_one_second()
 		if (io_delay > 5) {
 			Nx_string = Nu_string = PVstring = OPstring = "IO error";
 			statusBar()->showMessage(QTextCodec::codecForLocale()->toUnicode( "Ошибка устройства ввода/вывода.Проверьте вставлено ли устройство в порт." ));
-			textLabel->setVisible(true);
-			textLabel2->setVisible(true);
+			gr1_textError->setVisible(true);
+			gr2_textError->setVisible(true);
 		}
 		++ io_delay;
 	}
@@ -474,34 +416,5 @@ void testPlot::writeToDevice(unsigned short PV_code)
 		USB_DATA_IN, 0, 0, (char *) &data_packet, sizeof(data_packet), 5000);
 
 	usb_close(handle);
-
 }
 
-/* - замена осей для масштабирования
-void testPlot::on_rbNx_changedGraph()
-{
-if(b_Stop )
-{
-ui.plot_wid->graph(0)->setValueAxis(wideAxisRect->axis(QCPAxis::atLeft));
-ui.plot_wid->graph(1)->setValueAxis(wideAxisRect->axis(QCPAxis::atLeft,1));
-ui.plot_wid->graph(0)->rescaleValueAxis();
-ui.plot_wid->graph(1)->rescaleValueAxis(true);
-wideAxisRect->axis(QCPAxis::atLeft)->setTickLabelColor(Qt::blue);
-wideAxisRect->axis(QCPAxis::atLeft,1)->setTickLabelColor(Qt::red);
-}
-ui.plot_wid->replot();
-}
-void testPlot::on_rbNu_changedGraph()
-{
-if(b_Stop )
-{
-ui.plot_wid->graph(1)->setValueAxis(wideAxisRect->axis(QCPAxis::atLeft));
-ui.plot_wid->graph(0)->setValueAxis(wideAxisRect->axis(QCPAxis::atLeft,1));
-ui.plot_wid->graph(0)->rescaleValueAxis();
-ui.plot_wid->graph(1)->rescaleValueAxis(true);
-wideAxisRect->axis(QCPAxis::atLeft)->setTickLabelColor(Qt::red);
-wideAxisRect->axis(QCPAxis::atLeft,1)->setTickLabelColor(Qt::blue);
-}
-ui.plot_wid->replot();
-}
-*/

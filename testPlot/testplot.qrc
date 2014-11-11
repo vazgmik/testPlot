@@ -1,3 +1,7 @@
 <RCC>
-    <qresource prefix="/testPlot"/>
+    <qresource prefix="/testPlot">
+        <file>Resources/load_ico24.png</file>
+        <file>Resources/save_ico24.png</file>
+        <file>Resources/csv_ico32.png</file>
+    </qresource>
 </RCC>
