@@ -28,20 +28,13 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="font">
-         <font>
-          <family>Times New Roman</family>
-         </font>
-        </property>
         <property name="styleSheet">
          <string notr="true">QToolBox::tab {
-
-background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                  stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
                                  stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
-	font: 75 italic 14pt &quot;Times New Roman&quot;;
-     border-radius: 12px;
-     color: black;
+     border-radius: 5px;
+     color: darkgray;
  }
 
  QToolBox::tab:selected { /* italicize selected tabs */
@@ -61,7 +54,7 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
            <x>0</x>
            <y>0</y>
            <width>831</width>
-           <height>419</height>
+           <height>421</height>
           </rect>
          </property>
          <attribute name="label">
@@ -74,11 +67,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
                <widget class="QComboBox" name="cbModelType">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
                 <property name="currentText">
                  <string>Первый порядок</string>
                 </property>
@@ -104,7 +92,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                 <property name="font">
                  <font>
                   <family>Symbol</family>
-                  <pointsize>10</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -114,11 +101,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
               </item>
               <item>
                <widget class="QDoubleSpinBox" name="sbGain">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
                 <property name="maximum">
                  <double>500.990000000000009</double>
                 </property>
@@ -129,7 +111,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                 <property name="font">
                  <font>
                   <family>Symbol</family>
-                  <pointsize>10</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -139,11 +120,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
               </item>
               <item>
                <widget class="QDoubleSpinBox" name="sbDelay">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
                 <property name="maximum">
                  <double>500.990000000000009</double>
                 </property>
@@ -154,7 +130,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                 <property name="font">
                  <font>
                   <family>Symbol</family>
-                  <pointsize>10</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -164,11 +139,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
               </item>
               <item>
                <widget class="QDoubleSpinBox" name="sbTime1">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
                 <property name="maximum">
                  <double>500.990000000000009</double>
                 </property>
@@ -182,7 +152,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                 <property name="font">
                  <font>
                   <family>Symbol</family>
-                  <pointsize>10</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -194,11 +163,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
               </item>
               <item>
                <widget class="QDoubleSpinBox" name="sbTimeEps">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
                 <property name="maximum">
                  <double>500.990000000000009</double>
                 </property>
@@ -208,11 +172,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
             </item>
             <item>
              <widget class="QCheckBox" name="cbZoom">
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
               <property name="text">
                <string>Зум</string>
               </property>
@@ -220,11 +179,6 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
             </item>
             <item>
              <widget class="QTabWidget" name="plotWidget">
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
               <property name="currentIndex">
                <number>0</number>
               </property>
@@ -238,17 +192,7 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
-                  <widget class="QCustomPlot" name="plot_wid" native="true">
-                   <property name="font">
-                    <font>
-                     <family>Times New Roman</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <italic>false</italic>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                  </widget>
+                  <widget class="QCustomPlot" name="plot_wid" native="true"/>
                  </widget>
                 </item>
                </layout>
@@ -259,16 +203,7 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                </attribute>
                <layout class="QVBoxLayout" name="verticalLayout_6">
                 <item>
-                 <widget class="QCustomPlot" name="plot_wid_2" native="true">
-                  <property name="font">
-                   <font>
-                    <family>Times New Roman</family>
-                    <pointsize>10</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                 </widget>
+                 <widget class="QCustomPlot" name="plot_wid_2" native="true"/>
                 </item>
                </layout>
               </widget>
@@ -286,169 +221,89 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>831</width>
-           <height>419</height>
+           <width>178</width>
+           <height>70</height>
           </rect>
          </property>
          <attribute name="label">
-          <string>Опции</string>
+          <string>Окно калибровки</string>
          </attribute>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_11">
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
             <item>
-             <widget class="QFrame" name="frame">
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_5">
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="font">
-                  <font>
-                   <pointsize>12</pointsize>
-                   <italic>true</italic>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Окно калибровки</string>
-                 </property>
-                 <property name="textFormat">
-                  <enum>Qt::AutoText</enum>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
-                 <property name="spacing">
-                  <number>6</number>
-                 </property>
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetDefaultConstraint</enum>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_4">
-                   <item>
-                    <widget class="QLabel" name="lbtNu">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;N&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; vertical-align:sub;&quot;&gt;u &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QProgressBar" name="progressBar">
-                     <property name="maximum">
-                      <number>770</number>
-                     </property>
-                     <property name="value">
-                      <number>24</number>
-                     </property>
-                     <property name="textDirection">
-                      <enum>QProgressBar::TopToBottom</enum>
-                     </property>
-                     <property name="format">
-                      <string>%v</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="lbNu">
-                     <property name="text">
-                      <string>value</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_3">
-                   <item>
-                    <widget class="QLabel" name="lbt_Nx">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;N&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; vertical-align:sub;&quot;&gt;x &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSlider" name="horizontalSlider">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="lbNx">
-                     <property name="text">
-                      <string>value</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLabel" name="lbtNu">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;N&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; vertical-align:sub;&quot;&gt;u &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBar">
+                <property name="maximum">
+                 <number>770</number>
+                </property>
+                <property name="value">
+                 <number>24</number>
+                </property>
+                <property name="textDirection">
+                 <enum>QProgressBar::TopToBottom</enum>
+                </property>
+                <property name="format">
+                 <string>%v</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbNu">
+                <property name="text">
+                 <string>value</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QFrame" name="frame_2">
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_8">
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_7">
-                 <item>
-                  <widget class="QLabel" name="label_2">
-                   <property name="font">
-                    <font>
-                     <pointsize>12</pointsize>
-                     <italic>true</italic>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Ширина диапазона</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="graph_range">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                     <horstretch>4</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="maximum">
-                    <number>5000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QLabel" name="lbt_Nx">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;N&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; vertical-align:sub;&quot;&gt;x &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="horizontalSlider">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbNx">
+                <property name="text">
+                 <string>value</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -482,33 +337,16 @@ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="save_ini">
-   <property name="icon">
-    <iconset resource="testplot.qrc">
-     <normaloff>:/testPlot/Resources/save_ico24.png</normaloff>:/testPlot/Resources/save_ico24.png</iconset>
-   </property>
    <property name="text">
     <string>Сохранить в файл...</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="load_ini">
-   <property name="icon">
-    <iconset resource="testplot.qrc">
-     <normaloff>:/testPlot/Resources/load_ico24.png</normaloff>:/testPlot/Resources/load_ico24.png</iconset>
-   </property>
    <property name="text">
     <string>Загрузить из файла...</string>
    </property>
   </action>
   <action name="action_CSV">
-   <property name="icon">
-    <iconset resource="testplot.qrc">
-     <normaloff>:/testPlot/Resources/csv_ico32.png</normaloff>:/testPlot/Resources/csv_ico32.png</iconset>
-   </property>
    <property name="text">
     <string>Сохранить график(CSV)</string>
    </property>
