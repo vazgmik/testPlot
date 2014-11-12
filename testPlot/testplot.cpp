@@ -45,7 +45,7 @@ testPlot::testPlot(QWidget *parent)
 	connect(ui.action_CSV, SIGNAL(triggered()), this, SLOT(SaveCSV()));
 	connect(timer, SIGNAL(timeout()), this, SLOT(timeout_one_second()));
 	onStart();
-
+	
 }
 
 testPlot::~testPlot()

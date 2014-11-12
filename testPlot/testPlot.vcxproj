@@ -45,6 +45,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <ExecutablePath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\include\QtANGLE;C:\Qt\Qt5.1.1\5.1.1\msvc2012\include\QtPrintSupport;C:\Qt\Qt5.1.1\5.1.1\msvc2012\include;$(IncludePath)</IncludePath>
+    <ReferencePath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib;$(ReferencePath)</ReferencePath>
+    <LibraryPath>C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5OpenGL;C:\Qt\Qt5.1.1\5.1.1\msvc2012\lib\cmake\Qt5OpenGLExtensions;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
