@@ -239,7 +239,7 @@ void testPlot::setRangeOver(QCPRange newRange, QCPRange oldRange)
 
 
 
-void testPlot::setupRealtimeData(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2,QCPAxisRect * Rect,QCPItemText * textLabel )
+void testPlot::setupRealtimeData(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2,QCPAxisRect * Rect,QCPItemText *& textLabel )
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
 	QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
@@ -333,7 +333,7 @@ void testPlot::timeout_one_second()
 		writeToDevice(Nx_code);
 		statusBar()->clearMessage();
 		gr1_textError->setVisible(false);
-		gr2_textError->setVisible(false);
+		gr2_textError->setVisible(false );
 		Nx_string = QString::number(Nx_code);
 		Nu_string = QString::number(Nu_code);
 

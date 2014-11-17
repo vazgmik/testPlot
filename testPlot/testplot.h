@@ -54,7 +54,7 @@ class testPlot : public QMainWindow
 public:
 	short io_delay;
 	testPlot(QWidget *parent = 0);
-	void setupRealtimeData(QCustomPlot *,QString ,QString ,QCPAxisRect *,QCPItemText *);
+	void setupRealtimeData(QCustomPlot *,QString ,QString ,QCPAxisRect *,QCPItemText *&);
 	void onStart();
 	~testPlot();
 	QString Nx_string, Nu_string, PVstring, OPstring;
