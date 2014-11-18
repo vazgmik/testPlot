@@ -219,7 +219,7 @@
                </font>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="plot_tab1">
                <attribute name="title">
@@ -354,13 +354,6 @@
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="lbNu">
-                     <property name="text">
-                      <string>value</string>
-                     </property>
-                    </widget>
-                   </item>
                   </layout>
                  </item>
                  <item>
@@ -431,7 +424,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="graph_range"/>
+                <widget class="QSpinBox" name="graph_range">
+                 <property name="maximum">
+                  <number>1000</number>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -439,9 +436,6 @@
            </layout>
           </item>
          </layout>
-         <zorder>frame</zorder>
-         <zorder>progressBar</zorder>
-         <zorder>frame_2</zorder>
         </widget>
        </widget>
       </item>

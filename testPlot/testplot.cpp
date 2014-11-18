@@ -26,8 +26,7 @@ testPlot::testPlot(QWidget *parent)
 	ui.sbTime1->setValue(transfer_function.time_constant1);
 	ui.sbTimeEps->isVisible() && ui.sbTimeEps->text() == TimeConst2 ? ui.sbTimeEps->setValue(transfer_function.time_constant2) : 0;
 	ui.graph_range->setValue(20);
-	gr1_wideAxisRect = new QCPAxisRect(ui.plot_wid);
-	gr2_wideAxisRect = new QCPAxisRect(ui.plot_wid_2);
+	
 	setupRealtimeData(ui.plot_wid,"Nx","Nu",gr1_wideAxisRect,gr1_textError);
 	setupRealtimeData(ui.plot_wid_2,"OPn","PVn",gr2_wideAxisRect,gr2_textError);
 	gr1_wideAxisRect->axis(QCPAxis::atLeft)->setProperty("name","Graph1");
@@ -239,7 +238,7 @@ void testPlot::setRangeOver(QCPRange newRange, QCPRange oldRange)
 
 
 
-void testPlot::setupRealtimeData(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2,QCPAxisRect * Rect,QCPItemText *& textLabel )
+void testPlot::setupRealtimeData(QCustomPlot *customPlot,QString lax_lab1,QString lax_lab2,QCPAxisRect *& Rect,QCPItemText *& textLabel )
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
 	QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
@@ -247,7 +246,7 @@ void testPlot::setupRealtimeData(QCustomPlot *customPlot,QString lax_lab1,QStrin
 
 	// configure axis rect:
 	customPlot->plotLayout()->clear(); // clear default axis rect so we can start from scratch
-
+	Rect = new QCPAxisRect(customPlot);
 	Rect->setupFullAxesBox(true);																																																																																																																								
 	Rect->axis(QCPAxis::atLeft)->setTickLabelColor(Qt::blue);
 	Rect->axis(QCPAxis::atLeft)->setLabel(lax_lab1);
@@ -366,7 +365,6 @@ void testPlot::timeout_one_second()
 	if (filter == 0) {
 		ui.progressBar->setValue(Nu_code);
 		ui.lbNx->setText(Nx_string);
-		ui.lbNu->setText(Nu_string);
 	}
 	filter = (filter + 1) % 10;
 }
